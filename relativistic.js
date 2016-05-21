@@ -8,6 +8,8 @@ var zoom = 10;
 
 function render()
 {
+	requestAnimationFrame(render);
+	
 	context.fillStyle = 'black';
 	context.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -22,5 +24,10 @@ function render()
 
     context.restore();
 }
-
 render();
+
+/* Zoom in and out using mouse wheel */
+addEventListener('mousewheel', function(event) {
+    zoom *= Math.exp(-event.wheelDelta / 10000);
+    event.preventDefault();
+});
