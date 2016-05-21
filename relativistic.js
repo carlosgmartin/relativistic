@@ -30,7 +30,7 @@ function render()
     for (var i = 0; i < objects.length; ++i)
     {
     	context.beginPath();
-    	context.arc(objects[i][1], objects[i][2], 1, 0, 2 * Math.PI);
+    	context.arc(objects[i][1], objects[i][2], 1, 0, math.tau);
     	context.fill();
 	}
 
@@ -43,3 +43,7 @@ addEventListener('mousewheel', function(event) {
     zoom *= Math.exp(-event.wheelDelta / 10000);
     event.preventDefault();
 });
+
+
+
+
