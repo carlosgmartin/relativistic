@@ -15,6 +15,8 @@ for (var x = -20; x <= 20; x += 4)
 	}
 }
 
+
+
 function render()
 {
 	requestAnimationFrame(render);
@@ -42,6 +44,11 @@ render();
 addEventListener('mousewheel', function(event) {
     zoom *= Math.exp(-event.wheelDelta / 10000);
     event.preventDefault();
+
+    for (var i = 0; i < objects.length; ++i)
+	{
+		objects[i] = math.rotate(objects[i], [0, -1, 0], [0, 0, -1], event.wheelDelta / 10000);
+	}
 });
 
 
