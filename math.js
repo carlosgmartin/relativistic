@@ -4,6 +4,7 @@ var math = {
 	sin: Math.sin,
 	cosh: Math.cosh,
 	sinh: Math.sinh,
+	sqrt: Math.sqrt,
 	add: function (vector1, vector2)
 	{
 		var result = [];
@@ -67,6 +68,10 @@ var math = {
 		var vector2_rotated = math.scale(direction2, component2_rotated);
 		var vector_rotated = math.add(vector1_rotated, vector2_rotated);
 		return math.add(vector_rotated, vector_fixed);
+	},
+	square: function (x)
+	{
+		return x * x;
 	}
 };
 

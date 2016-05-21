@@ -1,5 +1,3 @@
-var vectors = [];
-
 var canvas = document.createElement('canvas');
 canvas.width = 640;
 canvas.height = 480;
@@ -9,14 +7,26 @@ var context = canvas.getContext('2d');
 var zoom = 5;
 
 var objects = [];
-for (var x = -20; x <= 20; x += 4)
+for (var x = -50; x <= 50; x += 4)
 {
-	for (var y = -20; y <= 20; y += 4)
+	for (var y = -50; y <= 50; y += 4)
 	{
-		objects.push([0, x, y]);
+		objects.push({
+			start_position: [0, x, y],
+			velocity: [1, 0, 0]
+		})
 	}
 }
-vectors = vectors.concat(objects);
+
+
+
+var vectors = [];
+for (var i = 0; i < objects.length; ++i)
+{
+	vectors.push(objects[i].start_position);
+	vectors.push(objects[i].velocity);
+}
+
 
 
 
@@ -27,13 +37,14 @@ function render()
 
     context.save();
     context.translate(canvas.width / 2, canvas.height / 2);
-    context.scale(zoom, -zoom);
+    context.scale(zoom, zoom);
 
     context.fillStyle = 'red';
     for (var i = 0; i < objects.length; ++i)
     {
+    	var position = find_intersection_position(objects[i]);
     	context.beginPath();
-    	context.arc(objects[i][1], objects[i][2], 1, 0, math.tau);
+    	context.arc(position[1], position[2], 1, 0, math.tau);
     	context.fill();
 	}
 
@@ -59,28 +70,28 @@ var rapidity = .01;
 setInterval(function() {
     /* Move left */
     if (keys[65]) {
-	    for (var i = 0; i < objects.length; ++i)
+	    for (var i = 0; i < vectors.length; ++i)
 		{
 			vectors[i].replace(math.boost(vectors[i], [1, 0, 0], [0, -1, 0], rapidity));
 		}
     }
     /* Move right */
     if (keys[68]) {
-	    for (var i = 0; i < objects.length; ++i)
+	    for (var i = 0; i < vectors.length; ++i)
 		{
 			vectors[i].replace(math.boost(vectors[i], [1, 0, 0], [0, 1, 0], rapidity));
 		}
     }
     /* Move up */
     if (keys[83]) {
-	    for (var i = 0; i < objects.length; ++i)
+	    for (var i = 0; i < vectors.length; ++i)
 		{
 			vectors[i].replace(math.boost(vectors[i], [1, 0, 0], [0, 0, 1], rapidity));
 		}
     }
     /* Move down */
     if (keys[87]) {
-	    for (var i = 0; i < objects.length; ++i)
+	    for (var i = 0; i < vectors.length; ++i)
 		{
 			vectors[i].replace(math.boost(vectors[i], [1, 0, 0], [0, 0, -1], rapidity));
 		}
@@ -94,3 +105,34 @@ Array.prototype.replace = function (array)
 	this.splice(0);
 	Array.prototype.push.apply(this, array);
 };
+
+
+
+
+
+
+function find_intersection(object)
+{
+	var observer = [0, 0, 0]; // in our case since the observer is at the origin
+	var delta = math.subtract(observer, object.start_position);
+	var parameter1 = (math.inner(object.velocity, delta) + math.sqrt(math.square(math.inner(object.velocity, delta)) - math.inner(object.velocity, object.velocity) * math.inner(delta, delta))) / math.inner(object.velocity, object.velocity);
+	var parameter2 = (math.inner(object.velocity, delta) - math.sqrt(math.square(math.inner(object.velocity, delta)) - math.inner(object.velocity, object.velocity) * math.inner(delta, delta))) / math.inner(object.velocity, object.velocity);
+	if (parameter1 <= delta[0] / object.velocity[0])
+	{
+		return parameter1;
+	}
+	else if (parameter2 <= delta[0] / object.velocity[0])
+	{
+		return parameter2;
+	}
+	else
+	{
+		console.log('Error: no solutions');
+	}
+}
+
+function find_intersection_position(object)
+{
+	var parameter = find_intersection(object);
+	return math.add(object.start_position, math.scale(object.velocity, parameter));
+}
