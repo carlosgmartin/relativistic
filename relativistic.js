@@ -4,12 +4,21 @@ canvas.height = 480;
 document.body.appendChild(canvas);
 var context = canvas.getContext('2d');
 
-var zoom = 10;
+var zoom = 5;
+
+var objects = [];
+for (var x = -20; x <= 20; x += 4)
+{
+	for (var y = -20; y <= 20; y += 4)
+	{
+		objects.push([0, x, y]);
+	}
+}
 
 function render()
 {
 	requestAnimationFrame(render);
-	
+
 	context.fillStyle = 'black';
 	context.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -18,9 +27,12 @@ function render()
     context.scale(zoom, -zoom);
 
     context.fillStyle = 'red';
-    context.beginPath();
-    context.arc(0, 0, 1, 0, 2 * Math.PI);
-    context.fill();
+    for (var i = 0; i < objects.length; ++i)
+    {
+    	context.beginPath();
+    	context.arc(objects[i][1], objects[i][2], 1, 0, 2 * Math.PI);
+    	context.fill();
+	}
 
     context.restore();
 }
