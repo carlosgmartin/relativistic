@@ -72,45 +72,61 @@ addEventListener('mousewheel', function(event) {
 
 var keys = {};
 addEventListener('keydown', function(event) {
-    keys[event.which] = true;
+    keys[event.which] = true;    
 });
 addEventListener('keyup', function(event) {
     keys[event.which] = false;
 });
 
-var rapidity_change = .005;
+var rapidity_change = .01;
 var total_rapidity = 0;
 setInterval(function() {
     /* Move left */
     if (keys[65]) {
     	total_rapidity -= rapidity_change;
-    	console.log(total_rapidity);
+    	//console.log(total_rapidity);
 	    for (var i = 0; i < vectors.length; ++i)
 		{
-			vectors[i].replace(boost(vectors[i], [1, 0, 0], [0, 1, 0], rapidity_change));
+			vectors[i].replace(math.boost_working(vectors[i], [1, 0, 0], [0, -1, 0], rapidity_change));
 		}
     }
     /* Move right */
     if (keys[68]) {
     	total_rapidity += rapidity_change;
-    	console.log(total_rapidity);
+    	//console.log(total_rapidity);
 	    for (var i = 0; i < vectors.length; ++i)
 		{
-			vectors[i].replace(boost(vectors[i], [1, 0, 0], [0, -1, 0], rapidity_change));
+			vectors[i].replace(math.boost_working(vectors[i], [1, 0, 0], [0, 1, 0], rapidity_change));
 		}
     }
     /* Move up */
     if (keys[83]) {
 	    for (var i = 0; i < vectors.length; ++i)
 		{
-			vectors[i].replace(boost(vectors[i], [1, 0, 0], [0, 0, -1], rapidity_change));
+			vectors[i].replace(math.boost_broken(vectors[i], [1, 0, 0], [0, 0, 1], rapidity_change));
 		}
     }
     /* Move down */
     if (keys[87]) {
 	    for (var i = 0; i < vectors.length; ++i)
 		{
-			vectors[i].replace(boost(vectors[i], [1, 0, 0], [0, 0, 1], rapidity_change));
+			vectors[i].replace(math.boost_broken(vectors[i], [1, 0, 0], [0, 0, -1], rapidity_change));
+		}
+    }
+    /* Q */
+    if (keys[81]) {
+	    for (var i = 0; i < vectors.length; ++i)
+		{
+			//vectors[i].replace(math.rotate(vectors[i], [1, 0, 0], [0, 0, 1], .005));
+			vectors[i].replace(math.rotate(vectors[i], [0, 1, 0], [0, 0, 1], -.005));
+		}
+    }
+    /* E */
+    if (keys[69]) {
+	    for (var i = 0; i < vectors.length; ++i)
+		{
+			//vectors[i].replace(math.rotate(vectors[i], [1, 0, 0], [0, 0, -1], .005));
+			vectors[i].replace(math.rotate(vectors[i], [0, 1, 0], [0, 0, 1], .005));
 		}
     }
     requestAnimationFrame(render);
@@ -145,39 +161,5 @@ function find_intersection_position(object)
 
 
 
-function boost(vector, timelike, spacelike, rapidity)
-{
-	rapidity_x = -spacelike[1] * .1;
-	rapidity_y = -spacelike[2] * .1;
-	var direction = Math.atan2(rapidity_y, rapidity_x);
-	var rapidity = rapidity_x * rapidity_x + rapidity_y * rapidity_y;
-	var beta = Math.tanh(rapidity);
-	var beta_x = beta * Math.cos(direction);
-	var beta_y = beta * Math.sin(direction);
-	var beta_squared = beta_x * beta_x + beta_y * beta_y;
-	if (beta_squared == 0)
-	{
-		return vector;
-	}
-	var gamma = 1 / Math.sqrt(1 - beta_squared);
-	var boost_matrix = [
-		[gamma, -gamma*beta_x, -gamma*beta_y],
-		[-gamma*beta_x,1+(gamma-1)*beta_x*beta_x/beta_squared,(gamma-1)*beta_x*beta_y/beta_squared],
-		[-gamma*beta_y,(gamma-1)*beta_y*beta_x/beta_squared,1+(gamma-1)*beta_y*beta_y/beta_squared]
-	];
-	return product(boost_matrix, vector);
-}
 
-function product(matrix, vector)
-{
-	var result = [];
-	for (var i = 0; i < matrix.length; ++i)
-	{
-		result.push(0);
-		for (var j = 0; j < vector.length; ++j)
-		{
-			result[i] += matrix[i][j] * vector[j];
-		}
-	}
-	return result;
-}
+

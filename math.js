@@ -55,10 +55,27 @@ var math = {
 		var vector_rotated = math.add(vector1_rotated, vector2_rotated);
 		return math.add(vector_rotated, vector_fixed);
 	},
-	boost: function (vector, direction1, direction2, rapidity)
+	square: function (x)
 	{
-		var component1 = math.inner(vector, direction1);
-		var component2 = math.inner(vector, direction2);
+		return x * x;
+	},
+	product: function(matrix, vector)
+	{
+		var result = [];
+		for (var i = 0; i < matrix.length; ++i)
+		{
+			result[i] = 0;
+			for (var j = 0; j < vector.length; ++j)
+			{
+				result[i] += matrix[i][j] * vector[j];
+			}
+		}
+		return result;
+	},
+	boost_broken: function (vector, direction1, direction2, rapidity)
+	{
+		var component1 = -math.inner(vector, direction1);
+		var component2 = -math.inner(vector, direction2);
 		var vector1 = math.scale(direction1, component1);
 		var vector2 = math.scale(direction2, component2);
 		var vector_fixed = math.subtract(vector, math.add(vector1, vector2));
@@ -69,9 +86,24 @@ var math = {
 		var vector_rotated = math.add(vector1_rotated, vector2_rotated);
 		return math.add(vector_rotated, vector_fixed);
 	},
-	square: function (x)
+	boost_working: function (vector, timelike, spacelike, rapidity)
 	{
-		return x * x;
+		var direction = Math.atan2(spacelike[2], spacelike[1]);
+		var beta = Math.tanh(rapidity);
+		var beta_x = beta * Math.cos(direction);
+		var beta_y = beta * Math.sin(direction);
+		var beta_squared = beta_x * beta_x + beta_y * beta_y;
+		if (beta_squared == 0)
+		{
+			return vector;
+		}
+		var gamma = 1 / Math.sqrt(1 - beta_squared);
+		var boost_matrix = [
+			[gamma, -gamma*beta_x, -gamma*beta_y],
+			[-gamma*beta_x,1+(gamma-1)*beta_x*beta_x/beta_squared,(gamma-1)*beta_x*beta_y/beta_squared],
+			[-gamma*beta_y,(gamma-1)*beta_y*beta_x/beta_squared,1+(gamma-1)*beta_y*beta_y/beta_squared]
+		];
+		return math.product(boost_matrix, vector);
 	}
 };
 
