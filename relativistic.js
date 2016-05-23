@@ -87,7 +87,7 @@ setInterval(function() {
     	//console.log(total_rapidity);
 	    for (var i = 0; i < vectors.length; ++i)
 		{
-			vectors[i].replace(math.boost_working(vectors[i], [1, 0, 0], [0, -1, 0], rapidity_change));
+			vectors[i].replace(math.boost(vectors[i], [1, 0, 0], [0, 1, 0], rapidity_change));
 		}
     }
     /* Move right */
@@ -96,21 +96,21 @@ setInterval(function() {
     	//console.log(total_rapidity);
 	    for (var i = 0; i < vectors.length; ++i)
 		{
-			vectors[i].replace(math.boost_working(vectors[i], [1, 0, 0], [0, 1, 0], rapidity_change));
-		}
-    }
-    /* Move up */
-    if (keys[83]) {
-	    for (var i = 0; i < vectors.length; ++i)
-		{
-			vectors[i].replace(math.boost_broken(vectors[i], [1, 0, 0], [0, 0, 1], rapidity_change));
+			vectors[i].replace(math.boost(vectors[i], [1, 0, 0], [0, -1, 0], rapidity_change));
 		}
     }
     /* Move down */
+    if (keys[83]) {
+	    for (var i = 0; i < vectors.length; ++i)
+		{
+			vectors[i].replace(math.boost(vectors[i], [1, 0, 0], [0, 0, 1], rapidity_change));
+		}
+    }
+    /* Move up */
     if (keys[87]) {
 	    for (var i = 0; i < vectors.length; ++i)
 		{
-			vectors[i].replace(math.boost_broken(vectors[i], [1, 0, 0], [0, 0, -1], rapidity_change));
+			vectors[i].replace(math.boost(vectors[i], [1, 0, 0], [0, 0, -1], rapidity_change));
 		}
     }
     /* Q */

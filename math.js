@@ -72,21 +72,21 @@ var math = {
 		}
 		return result;
 	},
-	boost_broken: function (vector, direction1, direction2, rapidity)
+	boost: function (vector, direction1, direction2, angle)
 	{
-		var component1 = -math.inner(vector, direction1);
-		var component2 = -math.inner(vector, direction2);
+		var component1 = math.inner(vector, direction1);
+		var component2 = -math.inner(vector, direction2); // minus sign fixes bug, covariant vs. contravariant?
 		var vector1 = math.scale(direction1, component1);
 		var vector2 = math.scale(direction2, component2);
 		var vector_fixed = math.subtract(vector, math.add(vector1, vector2));
-		var component1_rotated = component1 * math.cosh(rapidity) + component2 * math.sinh(rapidity);
-		var component2_rotated = component1 * math.sinh(rapidity) + component2 * math.cosh(rapidity);
+		var component1_rotated = component1 * math.cosh(angle) + component2 * math.sinh(angle);
+		var component2_rotated = component1 * math.sinh(angle) + component2 * math.cosh(angle);
 		var vector1_rotated = math.scale(direction1, component1_rotated);
 		var vector2_rotated = math.scale(direction2, component2_rotated);
 		var vector_rotated = math.add(vector1_rotated, vector2_rotated);
 		return math.add(vector_rotated, vector_fixed);
 	},
-	boost_working: function (vector, timelike, spacelike, rapidity)
+	boost_alternative: function (vector, timelike, spacelike, rapidity)
 	{
 		var direction = Math.atan2(spacelike[2], spacelike[1]);
 		var beta = Math.tanh(rapidity);
