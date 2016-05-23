@@ -49,7 +49,6 @@ function render()
     for (var i = 0; i < objects.length; ++i)
     {
     	var position = find_intersection_position(objects[i]);
-    	if (position == null) continue;
     	context.beginPath();
     	context.arc(position[1], position[2], 2/zoom, 0, math.tau);
     	context.fill();
@@ -61,8 +60,8 @@ function render()
     context.fill();
 
     context.restore();
+    console.log('ok');
 }
-render();
 
 /* Zoom in and out using mouse wheel */
 addEventListener('mousewheel', function(event) {
@@ -79,38 +78,33 @@ addEventListener('keyup', function(event) {
 });
 
 var rapidity_change = .01;
-var total_rapidity = 0;
 setInterval(function() {
     /* Move left */
     if (keys[65]) {
-    	total_rapidity -= rapidity_change;
-    	//console.log(total_rapidity);
 	    for (var i = 0; i < vectors.length; ++i)
 		{
-			vectors[i].replace(math.boost(vectors[i], [1, 0, 0], [0, -1, 0], rapidity_change));
+			vectors[i].replace(math.boost(vectors[i], [1, 0, 0], [0, 1, 0], rapidity_change));
 		}
     }
     /* Move right */
     if (keys[68]) {
-    	total_rapidity += rapidity_change;
-    	//console.log(total_rapidity);
 	    for (var i = 0; i < vectors.length; ++i)
 		{
-			vectors[i].replace(math.boost(vectors[i], [1, 0, 0], [0, 1, 0], rapidity_change));
+			vectors[i].replace(math.boost(vectors[i], [1, 0, 0], [0, -1, 0], rapidity_change));
 		}
     }
     /* Move down */
     if (keys[83]) {
 	    for (var i = 0; i < vectors.length; ++i)
 		{
-			vectors[i].replace(math.boost(vectors[i], [1, 0, 0], [0, 0, 1], rapidity_change));
+			vectors[i].replace(math.boost(vectors[i], [1, 0, 0], [0, 0, -1], rapidity_change));
 		}
     }
     /* Move up */
     if (keys[87]) {
 	    for (var i = 0; i < vectors.length; ++i)
 		{
-			vectors[i].replace(math.boost(vectors[i], [1, 0, 0], [0, 0, -1], rapidity_change));
+			vectors[i].replace(math.boost(vectors[i], [1, 0, 0], [0, 0, 1], rapidity_change));
 		}
     }
     /* Q */
@@ -150,7 +144,7 @@ function find_intersection(object)
 	var delta = math.subtract(observer, object.start_position);
 	var parameter1 = (math.inner(object.velocity, delta) + math.sqrt(math.square(math.inner(object.velocity, delta)) - math.inner(object.velocity, object.velocity) * math.inner(delta, delta))) / math.inner(object.velocity, object.velocity);
 	var parameter2 = (math.inner(object.velocity, delta) - math.sqrt(math.square(math.inner(object.velocity, delta)) - math.inner(object.velocity, object.velocity) * math.inner(delta, delta))) / math.inner(object.velocity, object.velocity);
-	return parameter1;
+	return parameter2;
 }
 
 function find_intersection_position(object)
