@@ -17,13 +17,6 @@ for (var x = -10; x <= 10; x += .5)
 		})
 	}
 }
-/*
-objects = [];
-objects.push({
-	start_position: [0, 5, 0],
-	velocity: [1, 0, 0]
-})
-*/
 
 
 var vectors = [];
@@ -95,6 +88,8 @@ setInterval(function() {
 		}
     }
     /* Move right */
+    // Notice the formation of a Rindler horizon under constant acceleration (hold the button down)
+    // Doppler effect (notice the wavefronts) is also noticeable at a high speed
     if (keys[68]) {
 	    for (var i = 0; i < vectors.length; ++i)
 		{
