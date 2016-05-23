@@ -82,7 +82,7 @@ addEventListener('keyup', function(event) {
 
 var rapidity_change = .01;
 setInterval(function() {
-	for (var i = 0; i < objects.length; ++i)
+	for (var i = 0; i < objects.length; ++i) // Translate only position vectors, not velocities
 	{
 		objects[i].start_position[0] -= .1;
 	}
