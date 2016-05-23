@@ -50,10 +50,12 @@ function render()
     {
     	var parameter = find_intersection_parameter(objects[i]);
     	var position = math.add(objects[i].start_position, math.scale(objects[i].velocity, parameter));
+    	context.globalAlpha = math.sin(parameter) * math.sin(parameter);
     	context.beginPath();
     	context.arc(position[1], position[2], 2/zoom, 0, math.tau);
     	context.fill();
 	}
+	context.globalAlpha = 1;
 
     context.fillStyle = 'white';
     context.beginPath();
@@ -80,6 +82,11 @@ addEventListener('keyup', function(event) {
 
 var rapidity_change = .01;
 setInterval(function() {
+	for (var i = 0; i < objects.length; ++i)
+	{
+		objects[i].start_position[0] -= .1;
+	}
+
     /* Move left */
     if (keys[65]) {
 	    for (var i = 0; i < vectors.length; ++i)
