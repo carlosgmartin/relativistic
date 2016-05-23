@@ -87,7 +87,7 @@ setInterval(function() {
     	//console.log(total_rapidity);
 	    for (var i = 0; i < vectors.length; ++i)
 		{
-			vectors[i].replace(math.boost(vectors[i], [1, 0, 0], [0, 1, 0], rapidity_change));
+			vectors[i].replace(math.boost(vectors[i], [1, 0, 0], [0, -1, 0], rapidity_change));
 		}
     }
     /* Move right */
@@ -96,7 +96,7 @@ setInterval(function() {
     	//console.log(total_rapidity);
 	    for (var i = 0; i < vectors.length; ++i)
 		{
-			vectors[i].replace(math.boost(vectors[i], [1, 0, 0], [0, -1, 0], rapidity_change));
+			vectors[i].replace(math.boost(vectors[i], [1, 0, 0], [0, 1, 0], rapidity_change));
 		}
     }
     /* Move down */
