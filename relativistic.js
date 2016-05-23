@@ -48,7 +48,8 @@ function render()
     context.fillStyle = 'red';
     for (var i = 0; i < objects.length; ++i)
     {
-    	var position = find_intersection_position(objects[i]);
+    	var parameter = find_intersection_parameter(objects[i]);
+    	var position = math.add(objects[i].start_position, math.scale(objects[i].velocity, parameter));
     	context.beginPath();
     	context.arc(position[1], position[2], 2/zoom, 0, math.tau);
     	context.fill();
@@ -138,7 +139,7 @@ Array.prototype.replace = function (array)
 
 
 
-function find_intersection(object)
+function find_intersection_parameter(object)
 {
 	var observer = [0, 0, 0]; // in our case since the observer is at the origin
 	var delta = math.subtract(observer, object.start_position);
@@ -149,7 +150,7 @@ function find_intersection(object)
 
 function find_intersection_position(object)
 {
-	var parameter = find_intersection(object);
+	var parameter = find_intersection_parameter(object);
 	return math.add(object.start_position, math.scale(object.velocity, parameter));
 }
 
