@@ -116,7 +116,7 @@ setInterval(function() {
 	    for (var i = 0; i < vectors.length; ++i)
 		{
 			//vectors[i].replace(math.rotate(vectors[i], [1, 0, 0], [0, 0, 1], .005));
-			vectors[i].replace(math.rotate(vectors[i], [0, 1, 0], [0, 0, 1], -.005));
+			vectors[i].replace(math.rotate(vectors[i], [0, 1, 0], [0, 0, 1], -.01));
 		}
     }
     /* E */
@@ -124,7 +124,7 @@ setInterval(function() {
 	    for (var i = 0; i < vectors.length; ++i)
 		{
 			//vectors[i].replace(math.rotate(vectors[i], [1, 0, 0], [0, 0, -1], .005));
-			vectors[i].replace(math.rotate(vectors[i], [0, 1, 0], [0, 0, 1], .005));
+			vectors[i].replace(math.rotate(vectors[i], [0, 1, 0], [0, 0, 1], .01));
 		}
     }
     requestAnimationFrame(render);
