@@ -1,4 +1,7 @@
 var math = {
+	square: function (x) {
+		return x * x;
+	},
 	add: function (vector, vector2) {
 		var result = [];
 		for (var i = 0; i < vector.length; ++i) {
@@ -30,8 +33,8 @@ var math = {
 		return result;
 	},
 	boost: function (vector, direction1, direction2, angle) {
-		var component1 = -math.inner(vector, direction1);
-		var component2 = math.inner(vector, direction2);
+		var component1 = math.inner(vector, direction1);
+		var component2 = -math.inner(vector, direction2);
 		var vector1 = math.scale(direction1, component1);
 		var vector2 = math.scale(direction2, component2);
 		var vector_fixed = math.subtract(vector, math.add(vector1, vector2));

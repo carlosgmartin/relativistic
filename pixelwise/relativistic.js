@@ -22,12 +22,20 @@ function render()
     for (var j = 0; j < height; ++j) {
         for (var i = 0; i < width; ++i) {
             var x = (i - width/2) / zoom;
-            var y = (j - height/2) / zoom;
+            var y = -(j - height/2) / zoom;
 
             var position = math.add(observer.position, math.add(math.scale(observer.x_axis, x), math.scale(observer.y_axis, y)));
-            var r = Math.sqrt(position[1] * position[1] + position[2] * position[2]);
+            position = project_light_cone(position);
 
-            data[index++] = 255 * Math.sin(r / 10) * Math.sin(r / 10);
+            var value;
+            if (position[1] > -100 && position[1] < 100 && position[2] > -100 && position[2] < 100) {
+            	value = Math.sin(position[0] / 10) * Math.sin(position[0] / 10);
+            }
+            else {
+            	value = 0;
+            }
+
+            data[index++] = 255 * value;
             data[index++] = 0;
             data[index++] = 0;
             data[index++] = 255;
@@ -59,21 +67,39 @@ var key_d = 68;
 
 var rapidity = .01;
 function update() {
+	observer.position = math.add(observer.position, observer.t_axis);
+
 	if (keys[key_d]) {
-		var direction = [0, 1, 0];
-		observer.t_axis = math.boost(observer.t_axis, [1, 0, 0], direction, rapidity);
-		observer.x_axis = math.boost(observer.x_axis, [1, 0, 0], direction, rapidity);
-		observer.y_axis = math.boost(observer.y_axis, [1, 0, 0], direction, rapidity);
+		var direction1 = observer.t_axis;
+		var direction2 = observer.x_axis;
+		observer.t_axis = math.boost(observer.t_axis, direction1, direction2, rapidity);
+		observer.x_axis = math.boost(observer.x_axis, direction1, direction2, rapidity);
+		observer.y_axis = math.boost(observer.y_axis, direction1, direction2, rapidity);
 	}
 	if (keys[key_a]) {
-		var direction = [0, -1, 0];
-		observer.t_axis = math.boost(observer.t_axis, [1, 0, 0], direction, rapidity);
-		observer.x_axis = math.boost(observer.x_axis, [1, 0, 0], direction, rapidity);
-		observer.y_axis = math.boost(observer.y_axis, [1, 0, 0], direction, rapidity);
+		var direction1 = observer.t_axis;
+		var direction2 = math.scale(observer.x_axis, -1);
+		observer.t_axis = math.boost(observer.t_axis, direction1, direction2, rapidity);
+		observer.x_axis = math.boost(observer.x_axis, direction1, direction2, rapidity);
+		observer.y_axis = math.boost(observer.y_axis, direction1, direction2, rapidity);
+	}
+	if (keys[key_w]) {
+		var direction1 = observer.t_axis;
+		var direction2 = observer.y_axis;
+		observer.t_axis = math.boost(observer.t_axis, direction1, direction2, rapidity);
+		observer.x_axis = math.boost(observer.x_axis, direction1, direction2, rapidity);
+		observer.y_axis = math.boost(observer.y_axis, direction1, direction2, rapidity);
+
+	}
+	if (keys[key_s]) {
+		var direction1 = observer.t_axis;
+		var direction2 = math.scale(observer.y_axis, -1);
+		observer.t_axis = math.boost(observer.t_axis, direction1, direction2, rapidity);
+		observer.x_axis = math.boost(observer.x_axis, direction1, direction2, rapidity);
+		observer.y_axis = math.boost(observer.y_axis, direction1, direction2, rapidity);
 	}
 
 	requestAnimationFrame(render);
-	console.log('ok');
 }
 var fps = 60;
 setInterval(update, 1000 / fps);
@@ -82,6 +108,11 @@ setInterval(update, 1000 / fps);
 
 
 
+function project_light_cone(position) {
+	var displacement = math.subtract(position, observer.position);
+	var parameter = (-math.inner(displacement, observer.t_axis) - Math.sqrt(math.square(math.inner(observer.t_axis, displacement)) - math.inner(observer.t_axis, observer.t_axis) * math.inner(displacement, displacement))) / math.inner(observer.t_axis, observer.t_axis);
+	return math.add(observer.position, math.add(displacement, math.scale(observer.t_axis, parameter)));
+}
 
 
 
