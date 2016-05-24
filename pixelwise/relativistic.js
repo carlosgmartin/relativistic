@@ -7,8 +7,12 @@ var width = canvas.width;
 var height = canvas.height;
 var image_data = context.createImageData(width, height);
 var data = image_data.data;
-
 var zoom = 1;
+
+var position = [0, 0, 0];
+var t_axis = [1, 0, 0];
+var x_axis = [0, 1, 0];
+var y_axis = [0, 0, 1];
 
 function render_pixel()
 {
@@ -17,6 +21,8 @@ function render_pixel()
         for (var i = 0; i < width; ++i) {
             var x = (i - width/2) / width * zoom;
             var y = (j - height/2) / height * zoom;
+
+            var position = math.add(position, math.add(math.scale(x_axis, x), math.scale(y_axis, y)));
 
             data[index++] = 255;
             data[index++] = 0;
@@ -27,6 +33,10 @@ function render_pixel()
     context.putImageData(image_data, 0, 0);
 }
 render_pixel();
+
+
+
+
 
 
 
