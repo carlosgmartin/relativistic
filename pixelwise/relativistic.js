@@ -1,6 +1,6 @@
 var canvas = document.createElement('canvas');
-canvas.width = 800;
-canvas.height = 800;
+canvas.width = 1000;
+canvas.height = 1000;
 document.body.appendChild(canvas);
 var context = canvas.getContext('2d');
 var width = canvas.width;
@@ -37,6 +37,8 @@ var observer = {
 
 function render()
 {
+	var position = new Array(3);
+	
 	console.log('Rendering...');
     var index = 0;
     for (var j = 0; j < height; ++j) {
@@ -48,7 +50,6 @@ function render()
             //position = project_light_cone(position);
             // Now inlining all of this to improve performance
 
-            var position = new Array(3);
             position[0] = observer.x_axis[0] * x + observer.y_axis[0] * y;
             position[1] = observer.x_axis[1] * x + observer.y_axis[1] * y;
             position[2] = observer.x_axis[2] * x + observer.y_axis[2] * y;
@@ -131,7 +132,7 @@ var key_d = 68;
 
 var rapidity = .02;
 function update() {
-	observer.position = add(observer.position, observer.t_axis);
+	observer.position = add(observer.position, scale(observer.t_axis, 3));
 
 	if (keys[key_d]) {
 		var direction1 = observer.t_axis;
