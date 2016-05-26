@@ -1,7 +1,9 @@
+"use strict";
+
 var canvas = document.createElement('canvas');
+document.body.appendChild(canvas);
 canvas.width = 1000;
 canvas.height = 1000;
-document.body.appendChild(canvas);
 var context = canvas.getContext('2d');
 var width = canvas.width;
 var height = canvas.height;
@@ -38,7 +40,16 @@ var observer = {
 function render()
 {
 	var position = new Array(3);
-	
+
+    if (!document.webkitFullscreenElement) {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        width = canvas.width;
+        height = canvas.height;
+		image_data = context.createImageData(width, height);
+		data = image_data.data;
+    }
+
 	console.log('Rendering...');
     var index = 0;
     for (var j = 0; j < height; ++j) {
@@ -73,8 +84,8 @@ function render()
             position[2] += observer.position[2] + observer.t_axis[2] * parameter;
             
             if (position[1] > 0 && -position[2] > 0 && position[1] < e_width && -position[2] < e_height) {
-            	e_i = Math.floor(position[1]);
-            	e_j = Math.floor(-position[2]);
+            	var e_i = Math.floor(position[1]);
+            	var e_j = Math.floor(-position[2]);
 
             	var e_index = (e_i + e_j * e_width) * 4;
             	data[index++] = e_data[e_index++];
@@ -137,31 +148,31 @@ function update() {
 	if (keys[key_d]) {
 		var direction1 = observer.t_axis;
 		var direction2 = observer.x_axis;
-		observer.t_axis = math.boost(observer.t_axis, direction1, direction2, rapidity);
-		observer.x_axis = math.boost(observer.x_axis, direction1, direction2, rapidity);
-		observer.y_axis = math.boost(observer.y_axis, direction1, direction2, rapidity);
+		observer.t_axis = boost(observer.t_axis, direction1, direction2, rapidity);
+		observer.x_axis = boost(observer.x_axis, direction1, direction2, rapidity);
+		observer.y_axis = boost(observer.y_axis, direction1, direction2, rapidity);
 	}
 	if (keys[key_a]) {
 		var direction1 = observer.t_axis;
 		var direction2 = scale(observer.x_axis, -1);
-		observer.t_axis = math.boost(observer.t_axis, direction1, direction2, rapidity);
-		observer.x_axis = math.boost(observer.x_axis, direction1, direction2, rapidity);
-		observer.y_axis = math.boost(observer.y_axis, direction1, direction2, rapidity);
+		observer.t_axis = boost(observer.t_axis, direction1, direction2, rapidity);
+		observer.x_axis = boost(observer.x_axis, direction1, direction2, rapidity);
+		observer.y_axis = boost(observer.y_axis, direction1, direction2, rapidity);
 	}
 	if (keys[key_w]) {
 		var direction1 = observer.t_axis;
 		var direction2 = observer.y_axis;
-		observer.t_axis = math.boost(observer.t_axis, direction1, direction2, rapidity);
-		observer.x_axis = math.boost(observer.x_axis, direction1, direction2, rapidity);
-		observer.y_axis = math.boost(observer.y_axis, direction1, direction2, rapidity);
+		observer.t_axis = boost(observer.t_axis, direction1, direction2, rapidity);
+		observer.x_axis = boost(observer.x_axis, direction1, direction2, rapidity);
+		observer.y_axis = boost(observer.y_axis, direction1, direction2, rapidity);
 
 	}
 	if (keys[key_s]) {
 		var direction1 = observer.t_axis;
 		var direction2 = scale(observer.y_axis, -1);
-		observer.t_axis = math.boost(observer.t_axis, direction1, direction2, rapidity);
-		observer.x_axis = math.boost(observer.x_axis, direction1, direction2, rapidity);
-		observer.y_axis = math.boost(observer.y_axis, direction1, direction2, rapidity);
+		observer.t_axis = boost(observer.t_axis, direction1, direction2, rapidity);
+		observer.x_axis = boost(observer.x_axis, direction1, direction2, rapidity);
+		observer.y_axis = boost(observer.y_axis, direction1, direction2, rapidity);
 	}
 
 	requestAnimationFrame(render);
@@ -172,34 +183,34 @@ setInterval(update, 1000 / fps);
 
 
 
-
+function boost(vector, direction1, direction2, angle) {
+	var component1 = inner(vector, direction1);
+	var component2 = -inner(vector, direction2);
+	var vector1 = subtract(direction1, component1);
+	var vector2 = subtract(direction2, component2);
+	var vector_fixed = subtract(vector, add(vector1, vector2));
+	var component1_rotated = component1 * Math.cosh(angle) + component2 * Math.sinh(angle);
+	var component2_rotated = component1 * Math.sinh(angle) + component2 * Math.cosh(angle);
+	var vector1_rotated = subtract(direction1, component1_rotated);
+	var vector2_rotated = subtract(direction2, component2_rotated);
+	var vector_rotated = add(vector1_rotated, vector2_rotated);
+	return add(vector_rotated, vector_fixed);
+}
 
 
 function project_light_cone(position) {
-	var displacement = math.subtract(position, observer.position);
-	var parameter = (-math.inner(displacement, observer.t_axis) - Math.sqrt(math.square(math.inner(observer.t_axis, displacement)) - math.inner(observer.t_axis, observer.t_axis) * math.inner(displacement, displacement))) / math.inner(observer.t_axis, observer.t_axis);
+	var displacement = subtract(position, observer.position);
+	var parameter = (-inner(displacement, observer.t_axis) - Math.sqrt(square(inner(observer.t_axis, displacement)) - inner(observer.t_axis, observer.t_axis) * inner(displacement, displacement))) / inner(observer.t_axis, observer.t_axis);
 	return add(observer.position, add(displacement, scale(observer.t_axis, parameter)));
 }
 
 
-function add(vector, vector2) {
-	var result = [];
-	for (var i = 0, l = vector.length; i < l; ++i) {
-		result[i] = vector[i] + vector2[i];
-	}
-	return result;
+
+
+function square(x) {
+	return x * x;
 }
 
-function scale(vector, scalar) {
-	var result = [];
-	for (var i = 0, l = vector.length; i < l; ++i) {
-		result[i] = vector[i] * scalar;
-	}
-	return result;
-}
-
-
-/*
 function add(vector, vector2) {
 	var result = [];
 	for (var i = 0; i < vector.length; ++i) {
@@ -236,11 +247,11 @@ function inner(vector1, vector2) {
 
 function boost(vector, direction1, direction2, angle)
 {
-	var component1 = -math.inner(vector, direction1);
-	var component2 = math.inner(vector, direction2);
+	var component1 = inner(vector, direction1);
+	var component2 = -inner(vector, direction2);
 	var vector1 = scale(direction1, component1);
 	var vector2 = scale(direction2, component2);
-	var vector_fixed = math.subtract(vector, add(vector1, vector2));
+	var vector_fixed = subtract(vector, add(vector1, vector2));
 	var component1_rotated = component1 * Math.cosh(angle) + component2 * Math.sinh(angle);
 	var component2_rotated = component1 * Math.sinh(angle) + component2 * Math.cosh(angle);
 	var vector1_rotated = scale(direction1, component1_rotated);
@@ -262,4 +273,3 @@ function rotate(vector, direction1, direction2, angle) {
 	var vector_rotated = add(vector1_rotated, vector2_rotated);
 	return add(vector_rotated, vector_fixed);
 }
-*/

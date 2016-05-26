@@ -1,15 +1,7 @@
-html, body {
-	height: 100%;
+body {
 	margin: 0;
 }
 
 canvas {
-	min-width: 100%;
-	min-height: 100%;
-	image-rendering: pixelated;
 	display: block;
-}
-
-::-webkit-scrollbar {
-	display: none;
 }
