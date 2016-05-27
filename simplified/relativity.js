@@ -204,8 +204,38 @@ function vector_coordinates_test()
     return vector_equals(vector_coordinates(frame, vector), [1, 2, 3, 4]);
 }
 
-/* Find value of parametrized vector a + tb with zero norm */
-function find_null_vector(a, b)
+
+
+
+
+
+
+
+
+/* Find the sum of 2 tensors */
+function sum(tensor1, tensor2)
+{
+    var result = [];
+    for (var i = tensor1.length - 1; i >= 0; --i)
+    {
+        result[i] = [];
+        for (var j = tensor1[i].length - 1; j >= 0; --j)
+        {
+            result[i][j] = tensor1[i][j] + tensor2[i][j];
+        }
+    }
+    return result;
+}
+
+
+
+
+
+
+
+
+/* Find solution to |a + bt| = 0 */
+function find_null(a, b)
 {
     var aa = inner(a, a);
     var ab = inner(a, b);
@@ -213,6 +243,61 @@ function find_null_vector(a, b)
     var t1 = (-ab + sqrt(ab * ab - aa * bb)) / bb;
     var t2 = (-ab - sqrt(ab * ab - aa * bb)) / bb;
     return sum(a, scale(b, t1));
+}
+
+/* Find components of a tensor in a reference frame */
+function find_components(frame, tensor)
+{
+    return product(tensor, frame.orientation);
+}
+
+/* Find coordinates of a point in a reference frame */
+function find_coordinates(frame, point)
+{
+    return find_components(frame, difference(point, frame.position));
+}
+
+
+
+
+
+/* Compose 2 Lorentz transformations */
+function compose(transformation1, transformation2)
+{
+
+}
+
+/* Transform a vector according to a Lorentz transformation */
+function transform(vector, transformation)
+{
+
+}
+
+
+
+
+
+
+
+
+frame.transformation = compose(frame.transformation, transformation_03);
+
+
+
+
+
+
+
+
+
+function apply(transformation, vector)
+{
+    var result = [];
+    for (var i = 0; i < dimensions; ++i)
+    {
+        result[i] = 0;
+        for (var )
+    }
 }
 
 
@@ -223,6 +308,67 @@ function find_null_vector(a, b)
 
 
 
+/* Compose 2 Lorentz transforms */
+function compose(transform1, transform2)
+{
+    var result = [];
+    for (var i3 = 0; i3 < dimensions; ++i3)
+    {
+        result[i3] = 0;
+        for (var i1 = 0; i1 < dimensions; ++i1)
+        {
+            result[i3][i1] = 0;
+            for (var i2 = 0; i2 < dimensions; ++i2)
+            {
+                result[i3][i1] = transform1[i3][i2] * transform2[i2][i1];
+            }
+        }
+    }
+    return result;
+}
+
+/* Apply a Lorentz transformation to a vector */
+function apply(transformation, vector)
+{
+    var result = [];
+    for (var after = 0; after < dimensions; ++after)
+    {
+        result[after] = 0;
+        for (var before = 0; before < dimensions; ++before)
+        {
+            result[after] = transformation[after][before] * vector[before];
+        }
+    }
+    return result;
+}
+
+function apply2(transformation, vector)
+{
+
+}
+
+
+
+
+
+
+function apply(transformation, tensor)
+{
+    var result = [];
+    for (var i1 = 0; i1 < dimensions; ++i1)
+    {
+        result[i1] = [];
+        for (var i2 = 0; i2 < dimensions; ++i2)
+        {
+            result[i1][i2] = [];
+            for (var i3 = 0; i3 < dimensions; ++i3)
+            {
+                result[i1][i2][i3] = 0;
+                
+            }
+        }
+    }
+}
 
 
 
