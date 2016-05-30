@@ -1,45 +1,52 @@
+var zero_vector = [0, 0, 0, 0];
+
+var identity_matrix = [[1, 0, 0, 0],
+                       [0, 1, 0, 0],
+                       [0, 0, 1, 0],
+                       [0, 0, 0, 1]];
+
 /* Adds 2 vectors */
 function add(vector, vector2)
 {
-	var result = [];
-	for (var i = vector.length - 1; i >= 0; --i)
-	{
-		result[i] = vector[i] + vector2[i];
-	}
-	return result;
+    var result = [];
+    for (var i = vector.length - 1; i >= 0; --i)
+    {
+        result[i] = vector[i] + vector2[i];
+    }
+    return result;
 }
 
 /* Subtracts 2 vectors */
 function subtract(vector, vector2)
 {
-	var result = [];
-	for (var i = vector.length - 1; i >= 0; --i)
-	{
-		result[i] = vector[i] - vector2[i];
-	}
-	return result;
+    var result = [];
+    for (var i = vector.length - 1; i >= 0; --i)
+    {
+        result[i] = vector[i] - vector2[i];
+    }
+    return result;
 }
 
 /* Scales a vector */
 function scale(vector, scalar)
 {
-	var result = [];
-	for (var i = vector.length - 1; i >= 0; --i)
-	{
-		result[i] = vector[i] * scalar;
-	}
-	return result;
+    var result = [];
+    for (var i = vector.length - 1; i >= 0; --i)
+    {
+        result[i] = vector[i] * scalar;
+    }
+    return result;
 }
 
-/* Find the inner product of 2 vectors */
+/* Finds the inner product of 2 vectors */
 function inner(vector, vector2)
 {
-	var result = vector[0] * vector2[0];
-	for (var i = vector.length - 1; i >= 1; --i)
-	{
-		result -= vector[i] * vector2[i];
-	}
-	return result;
+    var result = vector[0] * vector2[0];
+    for (var i = vector.length - 1; i >= 1; --i)
+    {
+        result -= vector[i] * vector2[i];
+    }
+    return result;
 }
 
 /* Composes 2 Lorentz transforms */
@@ -76,19 +83,19 @@ function apply(transform, vector)
     return result;
 }
 
-/* Find the components of a vector in a reference frame */
+/* Finds the components of a vector in a reference frame */
 function get_components(frame, vector)
 {
-	return apply(frame.orientation, vector);
+    return apply(frame.orientation, vector);
 }
 
-/* Find coordinates of a point in a reference frame */
+/* Finds the coordinates of a point in a reference frame */
 function get_coordinates(frame, point)
 {
-	return get_components(frame, subtract(point, frame.position));
+    return get_components(frame, subtract(point, frame.position));
 }
 
-/* Find solution to |a + bt| = 0 */
+/* Finds a solution to |a + bt| = 0 */
 function get_null(a, b)
 {
     var aa = inner(a, a);
