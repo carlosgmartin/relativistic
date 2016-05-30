@@ -380,5 +380,42 @@ function apply(transformation, tensor)
 
 
 
+/* Composition of 2 Lorentz transformations */
+function compose(transform1, transform2) {}
+
+/* Application of a Lorentz transformation to a vector */
+function apply(transform, vector) {}
+
+/* Inner product of 2 vectors */
+function inner(vector1, vector2) {}
+
+/* Sum of 2 vectors */
+function sum(vector1, vector2) {}
+
+/* Scale a vector */
+function scale(vector, scalar) {}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
