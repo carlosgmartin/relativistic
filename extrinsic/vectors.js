@@ -49,6 +49,12 @@ function inner(vector, vector2)
     return result;
 }
 
+/* Finds the norm of a (non-spacelike) vector */
+function norm(vector)
+{
+    return Math.sqrt(inner(vector, vector));
+}
+
 /* Composes 2 Lorentz transforms */
 function compose(transform, transform2)
 {
@@ -84,7 +90,7 @@ function apply(transform, vector)
 }
 
 /* Finds the inverse of a Lorentz transformation */
-function get_inverse(transform)
+function invert(transform)
 {
     var result = [];
     for (var i1 = transform.length - 1; i1 >= 0; --i1)
@@ -101,7 +107,7 @@ function get_inverse(transform)
 /* Finds the components of a vector in a reference frame */
 function get_components(frame, vector)
 {
-    return apply(get_inverse(frame.orientation), vector);
+    return apply(invert(frame.orientation), vector);
 }
 
 /* Finds the coordinates of a point in a reference frame */

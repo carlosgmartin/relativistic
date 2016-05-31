@@ -1,6 +1,6 @@
 /* Zoom in and out using mouse wheel */
 addEventListener('mousewheel', function(event) {
-    zoom *= Math.exp(-event.wheelDelta / 10000);
+    zoom *= Math.exp(event.wheelDelta / 10000);
     event.preventDefault();
 });
 
@@ -22,3 +22,4 @@ addEventListener('keyup', function (e) {
     keys[e.which] = false;
 });
 
+/* TODO: Add touch controls for zoom, rotation, and boosting */

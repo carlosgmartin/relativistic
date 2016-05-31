@@ -1,19 +1,21 @@
+var dimensions = 4;
+
 /* Defines positions and directions of geodesics */
 var geodesics = [];
-for (var x = -10; x <= 10; x += .5)
+for (var x = 0; x <= 407; x += 20)
 {
-    for (var y = -10; y <= 10; y += .5)
+    for (var y = 0; y <= 542; y += 20)
     {
+        /* Static grid */
         geodesics.push({
             position: [0, x, y, 0],
             direction: [1, 0, 0, 0]
         });
-        /*
-        geodesics.push({
+        /* Moving grid */
+        /* geodesics.push({
             position: [0, x, y, 0],
-            direction: [1, .5, 0, 0]
-        });
-        */
+            direction: [1, .9, 0, 0]
+        }); */
     }
 }
 
@@ -30,10 +32,10 @@ var rapidity = .005;
 var angle = .01;
 
 /* Define timestep for time translations */
-var timestep = .1;
+var timestep = 1;
 
 /* Define frames per second for updates */
-var fps = 60;
+var fps = 60 * 2;
 
 var smoothing = 50;
 var elapsed_time = 1000 / fps;
@@ -44,7 +46,7 @@ function update()
     elapsed_time += (current_time - previous_time - elapsed_time) / smoothing;
     previous_time = current_time;
     var measured_fps = 1000 / elapsed_time;
-    console.log(measured_fps.toFixed(0));
+    // console.log(measured_fps.toFixed(0));
 
     /* Update position of the observer in spacetime according to its own time axis */
     frame.position = add(frame.position, scale(frame.orientation[0], timestep));
