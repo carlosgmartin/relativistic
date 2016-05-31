@@ -55,13 +55,13 @@ function compose(transform, transform2)
     var result = [];
     for (var i3 = transform.length - 1; i3 >= 0; --i3)
     {
-        result[i3] = 0;
+        result[i3] = [];
         for (var i1 = transform.length - 1; i1 >= 0; --i1)
         {
             result[i3][i1] = 0;
             for (var i2 = transform.length - 1; i2 >= 0; --i2)
             {
-                result[i3][i1] = transform[i3][i2] * transform2[i2][i1];
+                result[i3][i1] += transform[i3][i2] * transform2[i2][i1];
             }
         }
     }
@@ -77,7 +77,7 @@ function apply(transform, vector)
         result[i2] = 0;
         for (var i1 = vector.length - 1; i1 >= 0; --i1)
         {
-            result[i2] = transform[i2][i1] * vector[i1];
+            result[i2] += transform[i2][i1] * vector[i1];
         }
     }
     return result;
@@ -101,7 +101,7 @@ function get_null(a, b)
     var aa = inner(a, a);
     var ab = inner(a, b);
     var bb = inner(b, b);
-    var t1 = (-ab + sqrt(ab * ab - aa * bb)) / bb;
-    var t2 = (-ab - sqrt(ab * ab - aa * bb)) / bb;
-    return sum(a, scale(b, t1));
+    var t1 = (-ab + Math.sqrt(ab * ab - aa * bb)) / bb;
+    var t2 = (-ab - Math.sqrt(ab * ab - aa * bb)) / bb;
+    return add(a, scale(b, t1));
 }
