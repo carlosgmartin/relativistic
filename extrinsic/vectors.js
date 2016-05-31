@@ -77,7 +77,22 @@ function apply(transform, vector)
         result[i2] = 0;
         for (var i1 = vector.length - 1; i1 >= 0; --i1)
         {
-            result[i2] += transform[i2][i1] * vector[i1];
+            result[i2] += transform[i1][i2] * vector[i1];
+        }
+    }
+    return result;
+}
+
+/* Finds the inverse of a Lorentz transformation */
+function get_inverse(transform)
+{
+    var result = [];
+    for (var i1 = transform.length - 1; i1 >= 0; --i1)
+    {
+        result[i1] = [];
+        for (var i2 = transform.length - 1; i2 >= 0; --i2)
+        {
+            result[i1][i2] = transform[i2][i1] * (i1 === 0 ? 1 : -1) * (i2 === 0 ? 1 : -1);
         }
     }
     return result;
@@ -86,7 +101,7 @@ function apply(transform, vector)
 /* Finds the components of a vector in a reference frame */
 function get_components(frame, vector)
 {
-    return apply(frame.orientation, vector);
+    return apply(get_inverse(frame.orientation), vector);
 }
 
 /* Finds the coordinates of a point in a reference frame */
@@ -101,7 +116,7 @@ function get_null(a, b)
     var aa = inner(a, a);
     var ab = inner(a, b);
     var bb = inner(b, b);
-    var t1 = (-ab + Math.sqrt(ab * ab - aa * bb)) / bb;
-    var t2 = (-ab - Math.sqrt(ab * ab - aa * bb)) / bb;
+    var t1 = (-ab - Math.sqrt(ab * ab - aa * bb)) / bb; /* Past light cone */
+    var t2 = (-ab + Math.sqrt(ab * ab - aa * bb)) / bb; /* Future light cone */
     return add(a, scale(b, t1));
 }

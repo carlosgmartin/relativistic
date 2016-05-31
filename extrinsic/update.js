@@ -8,6 +8,12 @@ for (var x = -10; x <= 10; x += .5)
             position: [0, x, y, 0],
             direction: [1, 0, 0, 0]
         });
+        /*
+        geodesics.push({
+            position: [0, x, y, 0],
+            direction: [1, .5, 0, 0]
+        });
+        */
     }
 }
 
@@ -18,7 +24,7 @@ var frame = {
 };
 
 /* Define rapidity for boosts */
-var rapidity = .01;
+var rapidity = .005;
 
 /* Define angle for rotations */
 var angle = .01;
@@ -26,8 +32,21 @@ var angle = .01;
 /* Define timestep for time translations */
 var timestep = .1;
 
+/* Define frames per second for updates */
+var fps = 60;
+
+var smoothing = 50;
+var elapsed_time = 1000 / fps;
+var previous_time = new Date;
 function update()
 {
+    var current_time = new Date;
+    elapsed_time += (current_time - previous_time - elapsed_time) / smoothing;
+    previous_time = current_time;
+    var measured_fps = 1000 / elapsed_time;
+    console.log(measured_fps.toFixed(0));
+
+    /* Update position of the observer in spacetime according to its own time axis */
     frame.position = add(frame.position, scale(frame.orientation[0], timestep));
 
     if (keys[key_w])
@@ -58,6 +77,4 @@ function update()
     requestAnimationFrame(render);
 }
 
-/* Define frames per second for updates */
-var fps = 60;
 setInterval(update, 1000 / fps);
